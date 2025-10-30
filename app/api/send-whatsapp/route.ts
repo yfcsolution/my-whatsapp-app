@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-// This handles sending messages via WhatsApp API
 export async function POST(request: Request) {
   try {
     const { to, message } = await request.json();
@@ -15,8 +14,7 @@ export async function POST(request: Request) {
 
     console.log('📱 WhatsApp API Request:', { to, message });
 
-    // SIMULATION MODE - Remove this when you have real WhatsApp credentials
-    // For now, we'll simulate successful message sending
+    // SIMULATION MODE - Working simulation
     const simulationResult = {
       success: true,
       messageId: `wa-sim-${Date.now()}`,
@@ -40,7 +38,6 @@ export async function POST(request: Request) {
   }
 }
 
-// Optional: Add GET method for testing
 export async function GET() {
   return NextResponse.json({
     status: 'WhatsApp API is working!',
