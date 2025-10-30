@@ -1,9 +1,11 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Smile, Paperclip, Mic, Send } from "lucide-react"
+import { SmileIcon, PaperclipIcon, MicIcon, SendIcon } from "@/lib/icons"
 
 interface MessageInputProps {
   onSendMessage: (content: string) => void
@@ -30,14 +32,14 @@ export function MessageInput({ onSendMessage, disabled = false }: MessageInputPr
           className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
           disabled={disabled}
         >
-          <Smile className="h-6 w-6" />
+          <SmileIcon className="h-6 w-6" />
         </button>
         <button
           type="button"
           className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
           disabled={disabled}
         >
-          <Paperclip className="h-6 w-6" />
+          <PaperclipIcon className="h-6 w-6" />
         </button>
         <Input
           value={message}
@@ -53,7 +55,7 @@ export function MessageInput({ onSendMessage, disabled = false }: MessageInputPr
             className="rounded-full bg-whatsapp-green hover:bg-whatsapp-green-dark h-10 w-10"
             disabled={disabled}
           >
-            <Send className="h-5 w-5" />
+            <SendIcon className="h-5 w-5" />
           </Button>
         ) : (
           <button
@@ -61,7 +63,7 @@ export function MessageInput({ onSendMessage, disabled = false }: MessageInputPr
             className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
             disabled={disabled}
           >
-            <Mic className="h-6 w-6" />
+            <MicIcon className="h-6 w-6" />
           </button>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MoreVertical, Phone, Video, Search } from "lucide-react"
+import { VideoIcon, PhoneIcon, SearchIcon, MoreVerticalIcon } from "@/lib/icons"
 import type { User } from "@/lib/types"
 import { formatDistanceToNow } from "date-fns"
 
@@ -12,7 +12,7 @@ export function ChatHeader({ user }: ChatHeaderProps) {
     <div className="flex items-center gap-3 border-b bg-gray-50 px-4 py-2.5">
       <div className="relative">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={user.avatar} alt={user.name} />
+          <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
           <AvatarFallback>{user.name[0]}</AvatarFallback>
         </Avatar>
         {user.status === "online" && (
@@ -25,21 +25,21 @@ export function ChatHeader({ user }: ChatHeaderProps) {
           {user.status === "online"
             ? "online"
             : user.lastSeen
-            ? `last seen ${formatDistanceToNow(user.lastSeen, { addSuffix: true })}`
-            : "offline"}
+              ? `last seen ${formatDistanceToNow(user.lastSeen, { addSuffix: true })}`
+              : "offline"}
         </p>
       </div>
       <button className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors">
-        <Video className="h-5 w-5" />
+        <VideoIcon className="h-5 w-5" />
       </button>
       <button className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors">
-        <Phone className="h-5 w-5" />
+        <PhoneIcon className="h-5 w-5" />
       </button>
       <button className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors">
-        <Search className="h-5 w-5" />
+        <SearchIcon className="h-5 w-5" />
       </button>
       <button className="rounded-full p-2 text-gray-600 hover:bg-gray-200 transition-colors">
-        <MoreVertical className="h-5 w-5" />
+        <MoreVerticalIcon className="h-5 w-5" />
       </button>
     </div>
   )

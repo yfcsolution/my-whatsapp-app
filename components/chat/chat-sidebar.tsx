@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Search, MessageCircle, MoreVertical, Archive, Settings } from "lucide-react"
+import { SearchIcon, MessageCircleIcon, MoreVerticalIcon, ArchiveIcon, SettingsIcon } from "@/lib/icons"
 import { currentUser } from "@/lib/chat-data"
 import type { Conversation } from "@/lib/types"
 import { formatDistanceToNow } from "date-fns"
@@ -29,34 +29,31 @@ export function ChatSidebar({ conversations, selectedUserId, onSelectUser }: Cha
     <div className="flex w-full max-w-md flex-col border-r bg-white">
       <div className="flex items-center gap-4 border-b bg-gray-50 p-4">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+          <AvatarImage src={currentUser.avatar || "/placeholder.svg"} alt={currentUser.name} />
           <AvatarFallback>{currentUser.name[0]}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <h2 className="font-semibold text-balance">WhatsApp</h2>
         </div>
-        <button 
-          onClick={() => window.location.href = '/dashboard'}
+        <button
+          onClick={() => (window.location.href = "/dashboard")}
           className="rounded-full p-2 hover:bg-gray-200 transition-colors"
           title="Settings"
         >
-          <Settings className="h-5 w-5 text-gray-600" />
+          <SettingsIcon className="h-5 w-5 text-gray-600" />
         </button>
         <button className="rounded-full p-2 hover:bg-gray-200 transition-colors">
-          <MessageCircle className="h-5 w-5 text-gray-600" />
+          <MessageCircleIcon className="h-5 w-5 text-gray-600" />
         </button>
         <button className="rounded-full p-2 hover:bg-gray-200 transition-colors">
-          <MoreVertical className="h-5 w-5 text-gray-600" />
+          <MoreVerticalIcon className="h-5 w-5 text-gray-600" />
         </button>
       </div>
 
       <div className="border-b p-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search or start new chat"
-            className="pl-10 bg-gray-50 border-none"
-          />
+          <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input placeholder="Search or start new chat" className="pl-10 bg-gray-50 border-none" />
         </div>
       </div>
 
@@ -79,7 +76,7 @@ export function ChatSidebar({ conversations, selectedUserId, onSelectUser }: Cha
       <ScrollArea className="flex-1">
         <button className="flex w-full items-center gap-3 border-b px-4 py-3 transition-colors hover:bg-gray-50">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-whatsapp-green">
-            <Archive className="h-5 w-5 text-white" />
+            <ArchiveIcon className="h-5 w-5 text-white" />
           </div>
           <div className="flex-1 text-left">
             <h3 className="font-semibold text-balance">Archived</h3>
@@ -99,12 +96,10 @@ export function ChatSidebar({ conversations, selectedUserId, onSelectUser }: Cha
                 isSelected ? "bg-gray-100" : ""
               }`}
             >
-              {isSelected && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-whatsapp-green" />
-              )}
+              {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-whatsapp-green" />}
               <div className="relative">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={conversation.user.avatar} alt={conversation.user.name} />
+                  <AvatarImage src={conversation.user.avatar || "/placeholder.svg"} alt={conversation.user.name} />
                   <AvatarFallback>{conversation.user.name[0]}</AvatarFallback>
                 </Avatar>
                 {conversation.user.status === "online" && (

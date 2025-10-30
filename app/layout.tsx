@@ -10,6 +10,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "ChatApp - Modern Messaging",
   description: "A modern WhatsApp-inspired messaging application",
+    generator: 'v0.app'
 }
 
 export default function RootLayout({

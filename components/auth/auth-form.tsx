@@ -1,12 +1,14 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { MessageCircle } from "lucide-react"
+import { MessageCircleIcon } from "@/lib/icons"
 
 export function AuthForm() {
   const [isLogin, setIsLogin] = useState(true)
@@ -27,16 +29,12 @@ export function AuthForm() {
       <CardHeader className="space-y-1 text-center">
         <div className="flex justify-center mb-4">
           <div className="rounded-full bg-whatsapp-green p-3">
-            <MessageCircle className="h-8 w-8 text-white" />
+            <MessageCircleIcon className="h-8 w-8 text-white" />
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold">
-          {isLogin ? "Welcome back" : "Create account"}
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold">{isLogin ? "Welcome back" : "Create account"}</CardTitle>
         <CardDescription>
-          {isLogin
-            ? "Enter your credentials to access your chats"
-            : "Sign up to start messaging"}
+          {isLogin ? "Enter your credentials to access your chats" : "Sign up to start messaging"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -80,11 +78,7 @@ export function AuthForm() {
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-whatsapp-green hover:underline"
-          >
+          <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-whatsapp-green hover:underline">
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
           </button>
         </div>
