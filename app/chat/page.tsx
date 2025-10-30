@@ -40,256 +40,117 @@ function deserializeMessages(raw: string): Message[] {
 export default function ChatPage() {
   const router = useRouter()
   const [messages, setMessages] = useState<Message[]>(initialMessages)
-  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [conversations, setConversations] = useState<Conversation[]>(getConversations())
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
-  const [isHydrated, setIsHydrated] = useState(false)
-  const [isAssistantResponding, setIsAssistantResponding] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
+  // Fix: Check if we're on client before using localStorage
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("isAuthenticated")
-    if (isAuthenticated !== "true") {
-      router.push("/auth")
-    }
-  }, [router])
-
-  useEffect(() => {
-    try {
+    setIsClient(true)
+    
+    // Only access localStorage on client side
+    if (typeof window !== "undefined") {
       const storedMessages = localStorage.getItem(MESSAGES_STORAGE_KEY)
+      const storedSelectedUserId = localStorage.getItem(SELECTED_USER_STORAGE_KEY)
+
       if (storedMessages) {
-        setMessages(deserializeMessages(storedMessages))
-      } else {
-        setMessages(initialMessages)
+        try {
+          setMessages(deserializeMessages(storedMessages))
+        } catch (error) {
+          console.error("Error parsing stored messages:", error)
+        }
       }
-    } catch (error) {
-      console.error("Failed to load chat messages", error)
-      setMessages(initialMessages)
-    }
 
-    const storedSelectedUser = localStorage.getItem(SELECTED_USER_STORAGE_KEY)
-    if (storedSelectedUser) {
-      setSelectedUserId(storedSelectedUser)
+      if (storedSelectedUserId) {
+        setSelectedUserId(storedSelectedUserId)
+      }
     }
-
-    setIsHydrated(true)
   }, [])
 
+  // Fix: Only save to localStorage on client side
   useEffect(() => {
-    setConversations(getConversations(messages))
-  }, [messages])
-
-  useEffect(() => {
-    if (!isHydrated) return
-
-    try {
-      const payload = serializeMessages(messages)
-      localStorage.setItem(MESSAGES_STORAGE_KEY, payload)
-    } catch (error) {
-      console.error("Failed to persist chat messages", error)
+    if (isClient && typeof window !== "undefined") {
+      localStorage.setItem(MESSAGES_STORAGE_KEY, serializeMessages(messages))
     }
-  }, [messages, isHydrated])
+  }, [messages, isClient])
 
+  // Fix: Only save selected user on client side
   useEffect(() => {
-    if (!isHydrated) return
-
-    if (selectedUserId) {
+    if (isClient && selectedUserId && typeof window !== "undefined") {
       localStorage.setItem(SELECTED_USER_STORAGE_KEY, selectedUserId)
-    } else {
-      localStorage.removeItem(SELECTED_USER_STORAGE_KEY)
     }
-  }, [selectedUserId, isHydrated])
+  }, [selectedUserId, isClient])
 
-  useEffect(() => {
-    if (conversations.length === 0) {
-      if (selectedUserId !== null) {
-        setSelectedUserId(null)
-      }
-      return
-    }
-
-    const hasSelectedConversation = selectedUserId
-      ? conversations.some((conversation) => conversation.userId === selectedUserId)
-      : false
-
-    if (!hasSelectedConversation) {
-      setSelectedUserId(conversations[0].userId)
-    }
-  }, [conversations, selectedUserId])
-
-  const handleAssistantReply = async (userMessage: Message) => {
-    const assistantMessageId = `msg-${Date.now()}-assistant`
-    const placeholder: Message = {
-      id: assistantMessageId,
-      senderId: AI_ASSISTANT_ID,
-      receiverId: currentUser.id,
-      content: "",
-      timestamp: new Date(),
-      read: false,
-    }
-
-    setMessages((prev) => [...prev, placeholder])
-    setIsAssistantResponding(true)
-
-    const conversationMessages = getMessagesForUser([...messages, userMessage], AI_ASSISTANT_ID)
-    const payloadMessages = [
-      { role: "system", content: "You are an interesting person" },
-      ...conversationMessages.map((message) => ({
-        role: message.senderId === currentUser.id ? "user" : "assistant",
-        content: message.content,
-      })),
-    ]
-
-    try {
-      const response = await fetch("/api/llm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ messages: payloadMessages }),
-      })
-
-      if (!response.ok || !response.body) {
-        const errorText = !response.ok ? await response.text() : ""
-        throw new Error(errorText || "No response body received")
-      }
-
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ""
-      let accumulated = ""
-      let streamComplete = false
-
-      while (!streamComplete) {
-        const { value, done } = await reader.read()
-
-        if (done) {
-          break
-        }
-
-        buffer += decoder.decode(value, { stream: true })
-        const events = buffer.split("\n\n")
-        buffer = events.pop() ?? ""
-
-        for (const event of events) {
-          const lines = event.split("\n")
-          for (const rawLine of lines) {
-            const line = rawLine.trim()
-            if (!line || !line.startsWith("data:")) {
-              continue
-            }
-
-            const data = line.slice(5).trim()
-            if (data === "[DONE]") {
-              streamComplete = true
-              break
-            }
-
-            try {
-              const parsed = JSON.parse(data)
-              const delta = parsed.choices?.[0]?.delta?.content as string | undefined
-              if (delta) {
-                accumulated += delta
-                const content = accumulated
-                setMessages((prev) =>
-                  prev.map((message) =>
-                    message.id === assistantMessageId ? { ...message, content } : message
-                  )
-                )
-              }
-            } catch (error) {
-              console.error("Failed to parse Groq stream chunk", error, data)
-            }
-          }
-
-          if (streamComplete) {
-            break
-          }
-        }
-      }
-
-      setMessages((prev) =>
-        prev.map((message) =>
-          message.id === assistantMessageId
-            ? {
-                ...message,
-                content: accumulated.trim() || "I'm here whenever you're ready to chat.",
-                timestamp: new Date(),
-                read: false,
-              }
-            : message
-        )
-      )
-    } catch (error) {
-      console.error("Groq request failed", error)
-      setMessages((prev) =>
-        prev.map((message) =>
-          message.id === assistantMessageId
-            ? {
-                ...message,
-                content: "I ran into an issue replying. Please try again shortly.",
-                timestamp: new Date(),
-              }
-            : message
-        )
-      )
-    } finally {
-      setIsAssistantResponding(false)
+  const handleSelectUser = (userId: string) => {
+    setSelectedUserId(userId)
+    
+    if (userId === AI_ASSISTANT_ID) {
+      const userMessages = getMessagesForUser(userId)
+      setMessages(userMessages)
     }
   }
 
   const handleSendMessage = (content: string) => {
     if (!selectedUserId) return
 
-    const trimmedContent = content.trim()
-
-    if (!trimmedContent) return
-
-    if (selectedUserId === AI_ASSISTANT_ID && isAssistantResponding) {
-      return
-    }
-
     const newMessage: Message = {
-      id: `msg-${Date.now()}`,
+      id: Date.now().toString(),
+      content,
       senderId: currentUser.id,
       receiverId: selectedUserId,
-      content: trimmedContent,
       timestamp: new Date(),
-      read: false,
+      status: "delivered",
     }
 
     setMessages((prev) => [...prev, newMessage])
 
+    // Simulate AI response for assistant
     if (selectedUserId === AI_ASSISTANT_ID) {
-      void handleAssistantReply(newMessage)
-      return
+      setTimeout(() => {
+        const aiResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          content: "This is an automated response from your AI assistant. How can I help you today?",
+          senderId: AI_ASSISTANT_ID,
+          receiverId: currentUser.id,
+          timestamp: new Date(),
+          status: "delivered",
+        }
+        setMessages((prev) => [...prev, aiResponse])
+      }, 1000)
     }
-
-    setTimeout(() => {
-      const autoReply: Message = {
-        id: `msg-${Date.now()}-reply`,
-        senderId: selectedUserId,
-        receiverId: currentUser.id,
-        content: "Thanks for your message! I'll get back to you soon. 👍",
-        timestamp: new Date(),
-        read: false,
-      }
-      setMessages((prev) => [...prev, autoReply])
-    }, 2000)
   }
 
-  const selectedUser = getAllUsers().find((u) => u.id === selectedUserId)
+  // Show loading state until client-side checks complete
+  if (!isClient) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-lg">Loading chat...</div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-gray-50">
       <ChatSidebar
         conversations={conversations}
         selectedUserId={selectedUserId}
-        onSelectUser={setSelectedUserId}
+        onSelectUser={handleSelectUser}
+        currentUser={currentUser}
+        className="w-80 border-r"
       />
       <ChatWindow
-        selectedUserId={selectedUserId}
-        messages={messages}
+        messages={messages.filter(
+          (message) =>
+            message.senderId === selectedUserId || message.receiverId === selectedUserId,
+        )}
+        selectedUser={
+          selectedUserId
+            ? getAllUsers().find((user) => user.id === selectedUserId)
+            : undefined
+        }
+        currentUser={currentUser}
         onSendMessage={handleSendMessage}
-        isAssistantResponding={isAssistantResponding}
+        className="flex-1"
       />
     </div>
   )
