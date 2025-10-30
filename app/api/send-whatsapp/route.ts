@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(simulationResult);
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ WhatsApp API Error:', error);
     return NextResponse.json(
       { 
