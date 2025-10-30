@@ -1,25 +1,24 @@
+// lib/types.ts
 export interface User {
   id: string
   name: string
-  email: string
   avatar: string
-  status: "online" | "offline"
   lastSeen?: Date
+  status: "online" | "offline" | "away"
 }
 
 export interface Message {
   id: string
+  content: string
   senderId: string
   receiverId: string
-  content: string
   timestamp: Date
-  read: boolean
+  status: "sent" | "delivered" | "read"
 }
 
 export interface Conversation {
-  id: string
   userId: string
-  user: User
-  lastMessage?: Message
-  unreadCount: number
+  lastMessage: string
+  timestamp: Date
+  unread: number
 }
