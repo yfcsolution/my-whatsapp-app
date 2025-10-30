@@ -26,28 +26,6 @@ export async function POST(request: Request) {
       note: "This is simulation mode. Add WhatsApp credentials to send real messages."
     };
 
-    // TODO: Uncomment and use this when you have real WhatsApp credentials
-    /*
-    // REAL WHATSAPP API INTEGRATION
-    const WHATSAPP_API_URL = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
-    
-    const realResponse = await fetch(WHATSAPP_API_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messaging_product: 'whatsapp',
-        to: to,
-        type: 'text',
-        text: { body: message }
-      })
-    });
-    
-    const realResult = await realResponse.json();
-    */
-
     return NextResponse.json(simulationResult);
     
   } catch (error) {
@@ -55,8 +33,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to send WhatsApp message',
-        details: error.message 
+        error: 'Failed to send WhatsApp message'
       },
       { status: 500 }
     );
