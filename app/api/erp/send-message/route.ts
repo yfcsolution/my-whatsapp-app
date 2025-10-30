@@ -23,22 +23,27 @@ const VALID_API_KEYS = [process.env.ERP_API_KEY || "erp-test-key-123"]
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const body: ERPMessageRequest = await request.json()
+    const apiKey = request.headers.get("x-api-key")
+
+    console.log("[v0] Received API key:", apiKey)
+    console.log("[v0] Expected API key:", process.env.ERP_API_KEY)
 
     // Validate API key
-    if (!body.apiKey || !VALID_API_KEYS.includes(body.apiKey)) {
+    if (!apiKey || !VALID_API_KEYS.includes(apiKey)) {
       return NextResponse.json(
         {
           success: false,
           error: "Invalid or missing API key",
           messageId: "",
           timestamp: new Date().toISOString(),
-          to: body.to || "",
+          to: "",
           status: "failed",
         } as ERPMessageResponse,
         { status: 401 },
       )
     }
+
+    const body: ERPMessageRequest = await request.json()
 
     // Validate required fields
     if (!body.to || !body.message) {

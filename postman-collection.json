@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "WhatsApp ERP API",
-    "description": "Complete API collection for testing WhatsApp ERP integration",
+    "name": "WhatsApp ERP API - Production",
+    "description": "Complete API collection for testing WhatsApp ERP integration on Vercel",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -11,10 +11,9 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Check if the API is running"
@@ -30,19 +29,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"Hello from ERP! This is a test message.\"\n}"
+          "raw": "{\n  \"to\": \"+923130541339\",\n  \"message\": \"Hello from ERP! This is a test message.\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Send a simple WhatsApp message from your ERP"
@@ -58,19 +56,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"Urgent: Order #12345 has been shipped!\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"orderId\": \"12345\",\n    \"customerName\": \"John Doe\",\n    \"trackingNumber\": \"TRK123456789\"\n  }\n}"
+          "raw": "{\n  \"to\": \"+923130541339\",\n  \"message\": \"Urgent: Order #12345 has been shipped!\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"orderId\": \"12345\",\n    \"customerName\": \"John Doe\",\n    \"trackingNumber\": \"TRK123456789\"\n  }\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Send a message with priority level and metadata"
@@ -86,19 +83,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"Invoice INV-2024-001 for $5,000 is ready. Please review and approve.\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"invoiceId\": \"INV-2024-001\",\n    \"amount\": \"5000\",\n    \"currency\": \"USD\",\n    \"dueDate\": \"2024-11-30\",\n    \"vendorName\": \"ABC Supplies\"\n  }\n}"
+          "raw": "{\n  \"to\": \"+923130541339\",\n  \"message\": \"Invoice INV-2024-001 for $5,000 is ready. Please review and approve.\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"invoiceId\": \"INV-2024-001\",\n    \"amount\": \"5000\",\n    \"currency\": \"USD\",\n    \"dueDate\": \"2024-11-30\",\n    \"vendorName\": \"ABC Supplies\"\n  }\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Send an invoice notification via WhatsApp"
@@ -114,19 +110,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"Order #ORD-2024-5678 confirmed! Total: $1,250. Delivery in 3-5 business days.\",\n  \"priority\": \"medium\",\n  \"metadata\": {\n    \"orderId\": \"ORD-2024-5678\",\n    \"totalAmount\": \"1250\",\n    \"itemCount\": \"5\",\n    \"estimatedDelivery\": \"2024-11-15\",\n    \"customerEmail\": \"customer@example.com\"\n  }\n}"
+          "raw": "{\n  \"to\": \"+923130541339\",\n  \"message\": \"Order #ORD-2024-5678 confirmed! Total: $1,250. Delivery in 3-5 business days.\",\n  \"priority\": \"medium\",\n  \"metadata\": {\n    \"orderId\": \"ORD-2024-5678\",\n    \"totalAmount\": \"1250\",\n    \"itemCount\": \"5\",\n    \"estimatedDelivery\": \"2024-11-15\",\n    \"customerEmail\": \"customer@example.com\"\n  }\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Send an order confirmation message"
@@ -142,19 +137,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"Payment reminder: Invoice INV-2024-001 for $5,000 is due on 2024-11-30. Please arrange payment.\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"invoiceId\": \"INV-2024-001\",\n    \"amount\": \"5000\",\n    \"daysUntilDue\": \"5\",\n    \"paymentTerms\": \"Net 30\"\n  }\n}"
+          "raw": "{\n  \"to\": \"+923130541339\",\n  \"message\": \"Payment reminder: Invoice INV-2024-001 for $5,000 is due on 2024-11-30. Please arrange payment.\",\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"invoiceId\": \"INV-2024-001\",\n    \"amount\": \"5000\",\n    \"daysUntilDue\": \"5\",\n    \"paymentTerms\": \"Net 30\"\n  }\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/send-message",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/send-message",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "send-message"]
         },
         "description": "Send a payment reminder"
@@ -166,15 +160,14 @@
         "method": "GET",
         "header": [
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/api/erp/message-status/msg_123456789",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/message-status/msg_123456789",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "message-status", "msg_123456789"]
         },
         "description": "Check the delivery status of a sent message (replace msg_123456789 with actual message ID)"
@@ -190,8 +183,8 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
@@ -199,10 +192,9 @@
           "raw": "{\n  \"testType\": \"connection\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/test",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/test",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "test"]
         },
         "description": "Test API connectivity"
@@ -218,19 +210,18 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"testType\": \"message\",\n  \"phoneNumber\": \"+1234567890\",\n  \"message\": \"This is a test message from Postman\"\n}"
+          "raw": "{\n  \"testType\": \"message\",\n  \"to\": \"+923130541339\",\n  \"message\": \"This is a test message from Postman\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/test",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/test",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "test"]
         },
         "description": "Test sending a message"
@@ -246,8 +237,8 @@
             "value": "application/json"
           },
           {
-            "key": "X-API-Key",
-            "value": "erp_test_key_12345"
+            "key": "x-api-key",
+            "value": "my-erp-secret-key-2025"
           }
         ],
         "body": {
@@ -255,10 +246,9 @@
           "raw": "{\n  \"testType\": \"full\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/erp/test",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
+          "raw": "https://v0-yfcsolution-my-whatsapp-app.vercel.app/api/erp/test",
+          "protocol": "https",
+          "host": ["v0-yfcsolution-my-whatsapp-app", "vercel", "app"],
           "path": ["api", "erp", "test"]
         },
         "description": "Run a complete integration test"
