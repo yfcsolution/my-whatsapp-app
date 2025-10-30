@@ -1,6 +1,6 @@
 import { CheckCheckIcon } from "@/lib/icons"
 import type { Message } from "@/lib/types"
-import { format } from "date-fns"
+import { formatTime } from "@/lib/date-utils"
 
 interface MessageBubbleProps {
   message: Message
@@ -21,7 +21,7 @@ export function MessageBubble({ message, isOwn, showAvatar = true, isGrouped = f
         {isOwn && <div className="absolute left-0 top-0 bottom-0 w-1 bg-whatsapp-green rounded-l-lg" />}
         <p className="break-words text-sm text-pretty leading-relaxed">{message.content}</p>
         <div className="mt-1 flex items-center justify-end gap-1">
-          <span className="text-[11px] text-gray-500">{format(message.timestamp, "HH:mm")}</span>
+          <span className="text-[11px] text-gray-500">{formatTime(message.timestamp)}</span>
           {isOwn && (
             <span className="text-gray-500">
               {message.read ? (

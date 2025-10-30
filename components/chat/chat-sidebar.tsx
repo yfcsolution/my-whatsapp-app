@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { SearchIcon, MessageCircleIcon, MoreVerticalIcon, ArchiveIcon, SettingsIcon } from "@/lib/icons"
 import { currentUser } from "@/lib/chat-data"
 import type { Conversation } from "@/lib/types"
-import { formatDistanceToNow } from "date-fns"
+import { formatDistanceToNow } from "@/lib/date-utils"
 
 interface ChatSidebarProps {
   conversations: Conversation[]
@@ -111,7 +111,7 @@ export function ChatSidebar({ conversations, selectedUserId, onSelectUser }: Cha
                   <h3 className="font-semibold text-balance truncate">{conversation.user.name}</h3>
                   {conversation.lastMessage && (
                     <span className="text-xs text-gray-500 whitespace-nowrap">
-                      {formatDistanceToNow(conversation.lastMessage.timestamp, { addSuffix: false })}
+                      {formatDistanceToNow(conversation.lastMessage.timestamp)}
                     </span>
                   )}
                 </div>

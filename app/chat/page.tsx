@@ -4,14 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatWindow } from "@/components/chat/chat-window"
-import {
-  initialMessages,
-  getConversations,
-  currentUser,
-  getAllUsers,
-  AI_ASSISTANT_ID,
-  getMessagesForUser,
-} from "@/lib/chat-data"
+import { initialMessages, getConversations, currentUser, AI_ASSISTANT_ID, getMessagesForUser } from "@/lib/chat-data"
 import type { Message, Conversation } from "@/lib/types"
 
 const MESSAGES_STORAGE_KEY = "chatMessages"
@@ -43,12 +36,11 @@ export default function ChatPage() {
   const [conversations, setConversations] = useState<Conversation[]>(getConversations())
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [isClient, setIsClient] = useState(false)
+  const [isAssistantResponding, setIsAssistantResponding] = useState(false)
 
-  // Fix: Check if we're on client before using localStorage
   useEffect(() => {
     setIsClient(true)
-    
-    // Only access localStorage on client side
+
     if (typeof window !== "undefined") {
       const storedMessages = localStorage.getItem(MESSAGES_STORAGE_KEY)
       const storedSelectedUserId = localStorage.getItem(SELECTED_USER_STORAGE_KEY)
@@ -67,14 +59,12 @@ export default function ChatPage() {
     }
   }, [])
 
-  // Fix: Only save to localStorage on client side
   useEffect(() => {
     if (isClient && typeof window !== "undefined") {
       localStorage.setItem(MESSAGES_STORAGE_KEY, serializeMessages(messages))
     }
   }, [messages, isClient])
 
-  // Fix: Only save selected user on client side
   useEffect(() => {
     if (isClient && selectedUserId && typeof window !== "undefined") {
       localStorage.setItem(SELECTED_USER_STORAGE_KEY, selectedUserId)
@@ -83,7 +73,7 @@ export default function ChatPage() {
 
   const handleSelectUser = (userId: string) => {
     setSelectedUserId(userId)
-    
+
     if (userId === AI_ASSISTANT_ID) {
       const userMessages = getMessagesForUser(userId)
       setMessages(userMessages)
@@ -104,8 +94,8 @@ export default function ChatPage() {
 
     setMessages((prev) => [...prev, newMessage])
 
-    // Simulate AI response for assistant
     if (selectedUserId === AI_ASSISTANT_ID) {
+      setIsAssistantResponding(true)
       setTimeout(() => {
         const aiResponse: Message = {
           id: (Date.now() + 1).toString(),
@@ -116,11 +106,11 @@ export default function ChatPage() {
           status: "delivered",
         }
         setMessages((prev) => [...prev, aiResponse])
+        setIsAssistantResponding(false)
       }, 1000)
     }
   }
 
-  // Show loading state until client-side checks complete
   if (!isClient) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -139,18 +129,10 @@ export default function ChatPage() {
         className="w-80 border-r"
       />
       <ChatWindow
-        messages={messages.filter(
-          (message) =>
-            message.senderId === selectedUserId || message.receiverId === selectedUserId,
-        )}
-        selectedUser={
-          selectedUserId
-            ? getAllUsers().find((user) => user.id === selectedUserId)
-            : undefined
-        }
-        currentUser={currentUser}
+        selectedUserId={selectedUserId}
+        messages={messages}
         onSendMessage={handleSendMessage}
-        className="flex-1"
+        isAssistantResponding={isAssistantResponding}
       />
     </div>
   )

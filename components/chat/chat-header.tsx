@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { VideoIcon, PhoneIcon, SearchIcon, MoreVerticalIcon } from "@/lib/icons"
 import type { User } from "@/lib/types"
-import { formatDistanceToNow } from "date-fns"
+import { formatDistanceToNowWithSuffix } from "@/lib/date-utils"
 
 interface ChatHeaderProps {
   user: User
@@ -25,7 +25,7 @@ export function ChatHeader({ user }: ChatHeaderProps) {
           {user.status === "online"
             ? "online"
             : user.lastSeen
-              ? `last seen ${formatDistanceToNow(user.lastSeen, { addSuffix: true })}`
+              ? `last seen ${formatDistanceToNowWithSuffix(user.lastSeen)}`
               : "offline"}
         </p>
       </div>
