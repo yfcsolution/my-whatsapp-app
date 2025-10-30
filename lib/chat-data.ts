@@ -58,7 +58,7 @@ export const allUsers: User[] = [
 ]
 
 // ADD THIS LINE TO FIX THE MISSING EXPORT ERROR:
-export const users = allUsers;
+export const users = allUsers
 
 export const initialMessages: Message[] = [
   {
@@ -90,16 +90,31 @@ export const initialMessages: Message[] = [
 // Fixed: Add proper error handling
 export function getConversations(): Conversation[] {
   try {
-    const conversations: Conversation[] = allUsers.map(user => ({
+    const conversations: Conversation[] = allUsers.map((user) => ({
       userId: user.id,
       lastMessage: getLastMessageForUser(user.id) || "No messages yet",
       timestamp: new Date(),
       unread: 0,
     }))
-    
+
     return conversations || []
   } catch (error) {
     console.error("Error getting conversations:", error)
+    return []
+  }
+}
+
+export function getMessagesForUser(messages: Message[], userId: string): Message[] {
+  try {
+    if (!messages || !Array.isArray(messages)) {
+      return []
+    }
+
+    const userMessages = messages.filter((message) => message.senderId === userId || message.receiverId === userId)
+
+    return userMessages || []
+  } catch (error) {
+    console.error("Error getting messages for user:", error)
     return []
   }
 }
@@ -108,34 +123,17 @@ export function getAllUsers(): User[] {
   return allUsers || []
 }
 
-export function getMessagesForUser(userId: string): Message[] {
-  try {
-    if (!initialMessages || !Array.isArray(initialMessages)) {
-      return []
-    }
-    
-    const userMessages = initialMessages.filter(
-      message => message.senderId === userId || message.receiverId === userId
-    )
-    
-    return userMessages || []
-  } catch (error) {
-    console.error("Error getting messages for user:", error)
-    return []
-  }
-}
-
 function getLastMessageForUser(userId: string): string {
   try {
     if (!initialMessages || !Array.isArray(initialMessages)) {
       return "No messages yet"
     }
-    
-    const userMessages = getMessagesForUser(userId)
+
+    const userMessages = getMessagesForUser(initialMessages, userId)
     if (userMessages.length === 0) {
       return "No messages yet"
     }
-    
+
     const lastMessage = userMessages[userMessages.length - 1]
     return lastMessage?.content || "No messages yet"
   } catch (error) {

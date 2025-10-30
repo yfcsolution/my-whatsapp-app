@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatWindow } from "@/components/chat/chat-window"
-import { initialMessages, getConversations, currentUser, AI_ASSISTANT_ID, getMessagesForUser } from "@/lib/chat-data"
+import { initialMessages, getConversations, currentUser, AI_ASSISTANT_ID } from "@/lib/chat-data"
 import type { Message, Conversation } from "@/lib/types"
 
 const MESSAGES_STORAGE_KEY = "chatMessages"
@@ -73,11 +73,6 @@ export default function ChatPage() {
 
   const handleSelectUser = (userId: string) => {
     setSelectedUserId(userId)
-
-    if (userId === AI_ASSISTANT_ID) {
-      const userMessages = getMessagesForUser(userId)
-      setMessages(userMessages)
-    }
   }
 
   const handleSendMessage = (content: string) => {

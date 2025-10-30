@@ -26,6 +26,11 @@ export async function POST(request: Request): Promise<Response> {
     const body: TestRequest = await request.json()
     const testType = body.testType || "connection"
 
+    console.log("[v0] ERP_API_KEY from env:", process.env.ERP_API_KEY)
+    console.log("[v0] VALID_API_KEYS:", VALID_API_KEYS)
+    console.log("[v0] Received API key:", body.apiKey)
+    console.log("[v0] API key match:", VALID_API_KEYS.includes(body.apiKey))
+
     const results: TestResult = {
       success: true,
       tests: {
@@ -46,7 +51,7 @@ export async function POST(request: Request): Promise<Response> {
     } else if (!VALID_API_KEYS.includes(body.apiKey)) {
       results.tests.apiKeyValidation = {
         passed: false,
-        message: "Invalid API key",
+        message: `Invalid API key. Expected: ${process.env.ERP_API_KEY ? "set in env" : "not set"}, Received: ${body.apiKey}`,
       }
       results.success = false
     } else {
