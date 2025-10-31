@@ -42,15 +42,48 @@ export async function POST(request: Request): Promise<Response> {
 
     const body: ERPMessageRequest = await request.json()
 
-    // Validate required fields
-    if (!body.to || !body.message) {
+    // Validate required fields based on message type
+    if (!body.to) {
       return NextResponse.json(
         {
           success: false,
-          error: "Missing required fields: to, message",
+          error: "Missing required field: to",
           messageId: "",
           timestamp: new Date().toISOString(),
-          to: body.to || "",
+          to: "",
+          status: "failed",
+        } as ERPMessageResponse,
+        { status: 400 },
+      )
+    }
+
+    // Check if it's a template message (has templateName)
+    const isTemplate = !!body.templateName
+
+    // For text messages, require message field
+    if (!isTemplate && !body.message) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Missing required field: message (required for text messages)",
+          messageId: "",
+          timestamp: new Date().toISOString(),
+          to: body.to,
+          status: "failed",
+        } as ERPMessageResponse,
+        { status: 400 },
+      )
+    }
+
+    // For template messages, require templateName
+    if (isTemplate && !body.templateName) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Missing required field: templateName (required for template messages)",
+          messageId: "",
+          timestamp: new Date().toISOString(),
+          to: body.to,
           status: "failed",
         } as ERPMessageResponse,
         { status: 400 },
@@ -73,8 +106,8 @@ export async function POST(request: Request): Promise<Response> {
       )
     }
 
-    // Validate message length
-    if (body.message.length > 4096) {
+    // Validate message length (only for text messages)
+    if (!isTemplate && body.message && body.message.length > 4096) {
       return NextResponse.json(
         {
           success: false,
@@ -114,11 +147,10 @@ export async function POST(request: Request): Promise<Response> {
       to: phoneNumber,
     }
 
-    // Use template or text message
-    if (body.messageType === "template") {
+    if (isTemplate) {
       whatsappBody.type = "template"
       whatsappBody.template = {
-        name: body.templateName || "hello_world",
+        name: body.templateName,
         language: {
           code: body.templateLanguage || "en_US",
         },
