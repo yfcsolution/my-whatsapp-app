@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatWindow } from "@/components/chat/chat-window"
 import { initialMessages, getConversations, currentUser, AI_ASSISTANT_ID } from "@/lib/chat-data"
@@ -31,7 +30,6 @@ function deserializeMessages(raw: string): Message[] {
 }
 
 export default function ChatPage() {
-  const router = useRouter()
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [conversations, setConversations] = useState<Conversation[]>(getConversations())
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
@@ -49,12 +47,17 @@ export default function ChatPage() {
         try {
           setMessages(deserializeMessages(storedMessages))
         } catch (error) {
-          console.error("Error parsing stored messages:", error)
+          console.error("[v0] Error parsing stored messages:", error)
         }
       }
 
       if (storedSelectedUserId) {
         setSelectedUserId(storedSelectedUserId)
+      } else {
+        const convos = getConversations()
+        if (convos.length > 0) {
+          setSelectedUserId(convos[0].userId)
+        }
       }
     }
   }, [])

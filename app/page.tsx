@@ -7,18 +7,7 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("isAuthenticated")
-    const hasSetupProfile = localStorage.getItem("userProfile")
-    
-    if (isAuthenticated === "true") {
-      if (hasSetupProfile) {
-        router.push("/chat")
-      } else {
-        router.push("/dashboard")
-      }
-    } else {
-      router.push("/auth")
-    }
+    router.push("/chat")
   }, [router])
 
   return (
