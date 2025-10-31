@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, MessageCircle, Send, Users, Clock } from "@/lib/icons"
+import { ArrowLeft, MessageCircle, Send, Users, Clock } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 

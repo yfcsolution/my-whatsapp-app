@@ -5,7 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Send } from "@/lib/icons"
+import { Send } from "lucide-react"
 
 interface SendMessageFormProps {
   onSend: (content: string, type?: string) => void

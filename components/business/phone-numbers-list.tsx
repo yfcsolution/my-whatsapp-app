@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Trash2 } from "@/lib/icons"
+import { MessageCircle, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 interface PhoneNumber {

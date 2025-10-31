@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { PhoneNumbersList } from "@/components/business/phone-numbers-list"
 import { AddPhoneNumberDialog } from "@/components/business/add-phone-number-dialog"
 import { Button } from "@/components/ui/button"
-import { Plus } from "@/lib/icons"
+import { Plus } from "lucide-react"
 
 export default function BusinessDashboard() {
   const [phoneNumbers, setPhoneNumbers] = useState([])
